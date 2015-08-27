@@ -195,7 +195,14 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 SOAPClient._onSendSoapRequest = function(method, async, callback, wsdl, req) 
 {
 	var o = null;
-	var nd = SOAPClient._getElementsByTagName(req.responseXML, method + "Result");
+	var nd = req.responseXML.getElementsByTagName('Body');
+
+    if (nd.length == 0) {
+        nd = req.responseXML.getElementsByTagName('SOAP-ENV:Body');
+    }
+
+    nd = nd[0].children;
+
 	if(nd.length == 0)
 		nd = SOAPClient._getElementsByTagName(req.responseXML, "return");	// PHP web Service?
 	if(nd.length == 0)
